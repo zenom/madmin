@@ -1,0 +1,35 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 12px/14px Arial, Helvetica, sans-serif;
+	color: #666;
+	text-align: left;
+	background: #404040;
+}
+
+a { color: #0088cc; text-decoration: none;}
+a:hover { text-decoration: underline;}
+a img { border: none;}
+
+p { margin: 0px 0px 20px 0px; line-height: 18px;}
+
+#box {
+	margin: 40px auto;
+	padding: 25px;
+	width: 400px;
+	background: #fff;
+}
+
+#box h2 {
+	font-size: 28px;
+	font-weight: bold;
+	margin: 0 0 20px;
+	text-align: center;
+}
+
+.light {
+	color: #ccc;
+}

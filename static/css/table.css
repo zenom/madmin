@@ -1,0 +1,34 @@
+/* Table Style */
+
+table {
+	width: 99%;
+	height: 100%;
+	margin: 0 0 15px;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+table thead,
+table tfoot {
+	background: url(../images/background-table.gif) repeat-x;
+}
+
+table th {
+	font-weight: bold;
+	padding: 5px 8px;
+	color: #444;
+}
+
+table td {
+	padding: 8px;
+	color: #444;
+	border-bottom: 1px solid #d2d2d2;
+}
+
+table td span.active { color: #55a34a;}
+table td span.pending { color: #c5a059;}
+table td span.closed { color: #a02b2b;}
+
+table .odd {
+	background: #f6f6f6; 
+}
