@@ -60,6 +60,17 @@ def drop_database(database):
         
     return redirect(url_for("databases"))
         
+# @app.route("/database/new", methods=["POST",])
+# def add_database():
+#         if request.method == "POST":
+#             if "database-name" in request.form:
+#                 if request.form.get("database-name"):
+#                     database_name = request.form.get("database-name")
+#                     if database_name in g.mongo.database_names():
+#                         return "exists"
+#                     else:
+#                         return request.form.get("database-name")
+            
 
 @app.before_request
 def connect_mongo():

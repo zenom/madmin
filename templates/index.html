@@ -6,11 +6,62 @@
 
 <title>madmin | Dashboard</title>
 
+<link rel="stylesheet" href="{{url_for("static", filename="css/black-tie/jquery-ui-1.8.custom.css")}}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{{url_for("static", filename="css/madmin/jquery-ui-1.8.custom.css")}}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="{{url_for("static", filename="css/style.css")}}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{{url_for("static", filename="css/table.css")}}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{{url_for("static", filename="css/form.css")}}" type="text/css" media="screen" />
-
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="{{url_for("static", filename="js/minmax.js")}}"></script>
+<style type="text/css" media="screen">
+    label, input { display:block; }
+	input.text { margin-bottom:12px; width:95%; padding: .4em; }
+	fieldset { padding:0; border:0; margin-top:25px; }
+</style>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        
+        
+        /*
+        $("a#new-database").click(function(e) {
+            e.preventDefault();
+            $("#dialog-form").dialog("open"); 
+        });
+        
+        $("#dialog-form").dialog({
+			autoOpen: false,
+			height: 225,
+			width: 350,
+			modal: true,
+			buttons: {
+				'Create Database': function() {
+				    var dbname = $("input#database-name").val();
+				    var myRegxp = /^([a-zA-Z0-9_-]+)$/;
+				    if(myRegxp.test(dbname) == false) {
+				        $("#database-error").html("Invalid database name.");
+				    } else {
+				        $.post("/database/new", {"database-name": dbname}, function(data) {
+				            if(data == "exists") {
+				                $("#database-error").html("That database already exists.");
+				            } else {
+				                window.location.reload();
+				            }
+				        });
+				    }
+				
+				},
+				Cancel: function() {
+					$(this).dialog('close');
+				}
+			},
+			close: function() {
+				//allFields.val('').removeClass('ui-state-error');
+			}
+		});
+		*/
+    });
+</script>
 
 </head>
 <body>
@@ -24,7 +75,7 @@
 </div>
 
 <div id="wrapper">
-
+  
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
@@ -46,11 +97,7 @@
 		<div class="navigation">
 			<ul>
 				<li class="active"><a href="#">Dashboard</a></li>
-				<li><a href="#">Databases</a>
-					<ul>
-						<li><a href="#">New Database</a></li>
-					</ul>
-				</li>
+				<li><a href="#">Databases</a></li>
 				<li><a href="#">Reports</a></li>
 				<li><a href="#">System</a></li>
 			</ul>
