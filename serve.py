@@ -45,19 +45,13 @@ def databases():
         for coll in this_db.collection_names():
             
             try:
-                idx_info = this_db.command("collstats", coll)
+                idx_info = this_db.command("collstats", coll, safe=True)
             except pymongo.OperationalError, e:
                 print e
                 
             total_indexes += idx_info.get("nindexes")
             total_size += idx_info.get("storageSize") 
             total_index_size += idx_info.get("totalIndexSize")
-        
-        if total_size:
-            total_size = round(float(total_size) / float(1024) / float(1024), 2) # should provide megabytes
-        
-        if total_index_size:
-            total_index_size = round(float(total_index_size) / float(1024) / float(1024), 2)
         
         db = dict(
             name=database, 
@@ -101,8 +95,52 @@ def drop_database(database):
 
 @app.route("/<database>/collections")
 def list_collections(database):
-        return database
+    this_db = pymongo.database.Database(g.mongo, database)
+    
+    collections = []
+    for coll in this_db.collection_names():
+        if coll in ["system.indexes",]:
+            continue
+            
+        total_indexes = total_size = total_index_size = 0
+        try:
+            idx_info = this_db.command("collstats", coll, safe=True)
+        except pymongo.OperationalError, e:
+            print e
+            
+        total_indexes += idx_info.get("nindexes")
+        total_size += idx_info.get("storageSize") 
+        total_index_size += idx_info.get("totalIndexSize")
+    
+        collection = dict(
+            name=coll, 
+            size=total_size, 
+            indexes=total_indexes, 
+            index_size=total_index_size,
+            documents=idx_info.get("count")
+        )
+        collections.append(collection)
+    return render_template("collections.html", collections=collections)
         
+        
+##############################
+# Filters
+##############################
+def pretty_size(size):
+    kb = float(size) / float(1024)
+    mb = kb / float(1024)
+    gb = mb / float(1024)
+    
+    if gb > 1:
+        return "%s GB" % (round(gb, 2))
+    
+    if mb > 1:
+        return "%s MB" % (round(mb,2))
+        
+    return "%s KB" % (round(kb,2))
+    
+app.jinja_env.filters["pretty_size"] = pretty_size
+
 if __name__ == "__main__":
     app.secret_key = "kTNpaQRVgJzwwTxcavixEpQqTwQezSVJLkALaUiJDj0fBc1Cfd"
     app.run(host=config.get("madmin", "host"), port=int(config.get("madmin", "port")), debug=True)

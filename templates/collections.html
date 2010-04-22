@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+
+{% block title %}
+  <h2>Collections<h2>
+{% endblock %}
+
+{% block content %}
+<div class="box">
+			<h3>Collections</h3>
+			<table>
+			<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Documents</th>
+				<th scope="col">Total Size</th>
+				<th scope="col">Index Count</th>
+				<th scope="col">Index Size</th>
+				<th scope="col">Action</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for collection in collections %}
+			<tr class="{{loop.cycle('odd', 'even')}}">
+				<td>{{collection.name}}</td>
+				<td>{{collection.documents}}</td>
+				<td>{{collection.size|pretty_size}}</td>
+				<td>{{collection.indexes}}</td>
+				<td>{{collection.index_size|pretty_size}}</td>
+				<td><a href="">View</a> | <a href="#">Rename</a> | <a href="">Drop</a> | <a href="#">Truncate</a></td>
+			</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+</div>
+{% endblock %}

@@ -97,7 +97,7 @@
 		
 		<div class="navigation">
 			<ul>
-				<li class="active"><a href="#">Databases</a></li>
+				<li class="active"><a href="{{url_for("databases")}}">Databases</a></li>
 				<li><a href="#">Reports</a></li>
 				<li><a href="#">System</a></li>
 			</ul>
@@ -136,8 +136,9 @@
 	<div id="content">
 	
 		<div class="title">		
-			<h2>Dashboard</h2>
+			{% block title %}<h2>Dashboard</h2>{% endblock %}
 		</div>
+		{% block content %}
 		<!--
 		<div class="box">
 			<h3>Subtitle Sample</h3>
@@ -245,9 +246,9 @@
 			<tr class="{{loop.cycle('odd', 'even')}}">
 				<td>{{database.name}}</td>
 				<td>{{database.collections}}</td>
-				<td>{{database.size}} MB</td>
+				<td>{{database.size|pretty_size}}</td>
 				<td>{{database.indexes}}</td>
-				<td>{{database.index_size}} MB</td>
+				<td>{{database.index_size|pretty_size}}</td>
 				<td><a href="{{url_for("list_collections", database=database.name)}}">Use</a> | <a href="#">Rename</a> | <a href="{{url_for("drop_database", database=database.name)}}">Remove</a></td>
 			</tr>
 			{% endfor %}
@@ -268,6 +269,7 @@
 				</ul>
             </div>
       -->
+      {% endblock %}
 		</div>
 	
 	</div>
