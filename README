@@ -1,0 +1,13 @@
+-- madmin --
+
+madmin or mongo admin is aiming to be a simple web based tool for managing a mongo database.
+The requirements are minimal enough to run it locally or on a webserver. 
+
+Currently this application is in a very limited state and is not recommended for any sort of 
+real usage.  There is no warnings when removing a database etc.
+
+== requirements ==
+Flask
+pymongo
+jinja2
+werkzeug

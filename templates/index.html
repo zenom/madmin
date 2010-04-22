@@ -69,9 +69,10 @@
 
 <div id="header">
 
-	<h1><a href="#"><img src="{{url_for("static", filename="images/logo.gif")}}" alt="Shadmin" /></a></h1>
+	<h1><a href="{{url_for("databases")}}"><img src="{{url_for("static", filename="images/logo.gif")}}" alt="Shadmin" /></a></h1>
+	<!--
 	<div class="menu">Welcome <a href="#">Admin</a>! | <a href="#">Help</a> | <a href="#">Settings</a> | <a href="#">Logout</a></div>
-
+    -->
 </div>
 
 <div id="wrapper">
@@ -96,13 +97,13 @@
 		
 		<div class="navigation">
 			<ul>
-				<li class="active"><a href="#">Dashboard</a></li>
-				<li><a href="#">Databases</a></li>
+				<li class="active"><a href="#">Databases</a></li>
 				<li><a href="#">Reports</a></li>
 				<li><a href="#">System</a></li>
 			</ul>
 		</div>
 
+        <!--
 		<div class="title">		
 			<h2>Search</h2>
 		</div>
@@ -113,7 +114,7 @@
 				<input type="image" src="{{url_for("static", filename="images/button-search.gif")}}" id="search-submit" class="search-submit" />
 			</form>
 		</div>
-
+        -->
 		<div class="title">		
 			<h2>Latest Changes</h2>
 		</div>
@@ -247,7 +248,7 @@
 				<td>{{database.size}} MB</td>
 				<td>{{database.indexes}}</td>
 				<td>{{database.index_size}} MB</td>
-				<td><a href="#">Use</a> | <a href="#">Rename</a> | <a href="{{url_for("drop_database", database=database.name)}}">Remove</a></td>
+				<td><a href="{{url_for("list_collections", database=database.name)}}">Use</a> | <a href="#">Rename</a> | <a href="{{url_for("drop_database", database=database.name)}}">Remove</a></td>
 			</tr>
 			{% endfor %}
 			</tbody>
@@ -272,7 +273,7 @@
 	</div>
 	
 	<div id="footer">
-		<span class="left"><a href="#">Dashboard</a> | <a href="{{url_for("databases")}}">Databases</a> | <a href="#">Reports</a> | <a href="#">System</a></span>
+		<span class="left"><a href="{{url_for("databases")}}">Databases</a> | <a href="#">Reports</a> | <a href="#">System</a></span>
 		<span class="right"></span>
 	</div>
 

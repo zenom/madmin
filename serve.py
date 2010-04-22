@@ -1,13 +1,33 @@
 from __future__ import with_statement
 
+import ConfigParser
+import os
 import pymongo
 
 from flask import flash, Flask, g, render_template, request, session, redirect,\
     url_for, abort
 
 app = Flask(__name__)
+config = ConfigParser.ConfigParser()
+config.readfp(open("madmin.ini"))
 
-@app.route("/databases")
+###############################
+## Before Request
+###############################
+
+@app.before_request
+def connect_mongo():
+    host = config.get("mongo", "host")
+    port = int(config.get("mongo", "port"))
+    username = config.get("mongo", "username")
+    password = config.get("mongo", "password")
+    g.mongo = pymongo.Connection(host, port)
+
+
+##############################
+# Database Management
+##############################
+@app.route("/")
 def databases():
     
     databases = []
@@ -50,6 +70,8 @@ def databases():
     
     return render_template("index.html", databases=databases)
     
+    
+    
 @app.route("/database/drop/<database>")
 def drop_database(database):
     try:
@@ -72,11 +94,15 @@ def drop_database(database):
 #                         return request.form.get("database-name")
             
 
-@app.before_request
-def connect_mongo():
-    g.mongo = pymongo.Connection("localhost", 27017)
-        
+
+##############################
+# Collection Management
+##############################
+
+@app.route("/<database>/collections")
+def list_collections(database):
+        return database
         
 if __name__ == "__main__":
     app.secret_key = "kTNpaQRVgJzwwTxcavixEpQqTwQezSVJLkALaUiJDj0fBc1Cfd"
-    app.run(host='127.0.0.1', port=27018, debug=True)
+    app.run(host=config.get("madmin", "host"), port=int(config.get("madmin", "port")), debug=True)

@@ -1,0 +1,5 @@
+-e git://github.com/mitsuhiko/flask.git@be15340e0f65e8785aff3033f0b2732ae31c6b81#egg=Flask-0.2-py2.6-dev
+Jinja2==2.4.1
+Werkzeug==0.6.1
+pymongo==1.6
+wsgiref==0.1.2
