@@ -65,6 +65,28 @@ def databases():
     return render_template("index.html", databases=databases)
     
     
+@app.route("/database/clone", methods=["POST",])
+def clone_database():
+    if request.method == "POST":
+        if "from" in request.form and "to" in request.form:
+            from_db = request.form.get("from")
+            to_db = request.form.get("to")
+            
+            try:
+                g.mongo.copy_database(from_db, to_db)
+                flash("%s has been cloned to %s." % (from_db, to_db))
+            except pymongo.errors.InvalidName:
+                return "Originating database does not exist."
+            except TypeError:
+                return "From & To must be strings."
+            except pymongo.errors.OperationError, e:
+                print e
+                return "Unable to clone database."
+            finally:
+                return ""
+            
+            #return "%s to %s" % (from_db, to_db)
+            
     
 @app.route("/database/drop/<database>")
 def drop_database(database):
@@ -76,19 +98,7 @@ def drop_database(database):
         
     return redirect(url_for("databases"))
         
-# @app.route("/database/new", methods=["POST",])
-# def add_database():
-#         if request.method == "POST":
-#             if "database-name" in request.form:
-#                 if request.form.get("database-name"):
-#                     database_name = request.form.get("database-name")
-#                     if database_name in g.mongo.database_names():
-#                         return "exists"
-#                     else:
-#                         return request.form.get("database-name")
-            
-
-
+        
 ##############################
 # Collection Management
 ##############################
