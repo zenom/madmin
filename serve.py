@@ -54,5 +54,5 @@ def connect_mongo():
         
         
 if __name__ == "__main__":
-    app.secret_key = "andy12"
+    app.secret_key = "kTNpaQRVgJzwwTxcavixEpQqTwQezSVJLkALaUiJDj0fBc1Cfd"
     app.run(host='127.0.0.1', port=27018, debug=True)
