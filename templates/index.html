@@ -4,7 +4,7 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>Shadmin | Dashboard</title>
+<title>madmin | Dashboard</title>
 
 <link rel="stylesheet" href="{{url_for("static", filename="css/style.css")}}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{{url_for("static", filename="css/table.css")}}" type="text/css" media="screen" />
@@ -68,14 +68,18 @@
 		</div>
 
 		<div class="title">		
-			<h2>Blog</h2>
+			<h2>Latest Changes</h2>
 		</div>
 		
 		<div class="box">
 			<ul id="blog">
-				<li><h4><a href="#" title="Sample Title">Sample Title</a> <abbr title="2009-01-20">2009-01-20</abbr></h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-				<li><h4><a href="#" title="Sample Title 2">Sample Title 2</a> <abbr title="2009-01-20">2009-01-15</abbr></h4><p>Duis sed orci. Fusce sapien sapien, ultricies eu, sagittis in, pretium nec, quam. Curabitur sed turpis. Aenean pharetra, quam non sagittis venenatis, eros nisl fringilla ligula, in viverra mi tortor a massa. In mi.</p></li>
-				<li><h4><a href="#" title="Sample Title 3">Sample Title 3</a> <abbr title="2009-01-20">2009-01-10</abbr></h4><p>Ut urna. Praesent scelerisque risus ut ipsum. Duis lacinia elit ut dolor.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
+				<li><h4><abbr title="2009-01-20">2009-01-20</abbr></h4><p>Deleted database blah.</p></li>
 			</ul>
 		</div>
 	
@@ -190,12 +194,12 @@
 			</thead>
 			<tbody>
 			{% for database in databases %}
-			<tr class="odd">
+			<tr class="{{loop.cycle('odd', 'even')}}">
 				<td>{{database.name}}</td>
 				<td>{{database.collections}}</td>
-				<td>{{database.size}}</td>
+				<td>{{database.size}} MB</td>
 				<td>{{database.indexes}}</td>
-				<td>{{database.index_size}}</td>
+				<td>{{database.index_size}} MB</td>
 				<td><a href="#">Use</a> | <a href="#">Rename</a> | <a href="{{url_for("drop_database", database=database.name)}}">Remove</a></td>
 			</tr>
 			{% endfor %}
@@ -221,8 +225,8 @@
 	</div>
 	
 	<div id="footer">
-		<span class="left"><a href="#">Dashboard</a> | <a href="#">Clients</a> | <a href="#">Reports</a> | <a href="#">System</a></span>
-		<span class="right">&copy; 2009 Shadmin. All Rights Reserved.</span>
+		<span class="left"><a href="#">Dashboard</a> | <a href="{{url_for("databases")}}">Databases</a> | <a href="#">Reports</a> | <a href="#">System</a></span>
+		<span class="right"></span>
 	</div>
 
 </div>

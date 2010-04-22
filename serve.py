@@ -11,20 +11,33 @@ app = Flask(__name__)
 def databases():
     
     databases = []
-    total_indexes = 0
-    total_size = 0
-    total_index_size = 0
+    
     for database in g.mongo.database_names():
+        total_indexes = 0
+        total_size = 0
+        total_index_size = 0
+        
+        # don't want people removing these as I believe they are important
+        if database in ["test", "local"]:
+                continue
+        
         this_db = pymongo.database.Database(g.mongo, database)
         for coll in this_db.collection_names():
+            
             try:
                 idx_info = this_db.command("collstats", coll)
             except pymongo.OperationalError, e:
                 print e
                 
             total_indexes += idx_info.get("nindexes")
-            total_size += idx_info.get("storageSize")
+            total_size += idx_info.get("storageSize") 
             total_index_size += idx_info.get("totalIndexSize")
+        
+        if total_size:
+            total_size = round(float(total_size) / float(1024) / float(1024), 2) # should provide megabytes
+        
+        if total_index_size:
+            total_index_size = round(float(total_index_size) / float(1024) / float(1024), 2)
         
         db = dict(
             name=database, 
