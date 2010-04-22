@@ -1,6 +1,9 @@
+from __future__ import with_statement
+
 import pymongo
 
-from flask import flash, Flask, g, render_template
+from flask import flash, Flask, g, render_template, request, session, redirect,\
+    url_for, abort
 
 app = Flask(__name__)
 
@@ -34,6 +37,16 @@ def databases():
     
     return render_template("index.html", databases=databases)
     
+@app.route("/database/drop/<database>")
+def drop_database(database):
+    try:
+        g.mongo.drop_database(database)
+        flash("%s has been dropped." % database)
+    except Exception ,e:
+        flash("Unable to drop %s. (%s)" % (database, e))
+        
+    return redirect(url_for("databases"))
+        
 
 @app.before_request
 def connect_mongo():
@@ -41,4 +54,5 @@ def connect_mongo():
         
         
 if __name__ == "__main__":
+    app.secret_key = "andy12"
     app.run(host='127.0.0.1', port=27018, debug=True)

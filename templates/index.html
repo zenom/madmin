@@ -25,13 +25,13 @@
 
 <div id="wrapper">
 
-  {# with messages = get_flashed_messages() #}
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
       {% for message in messages %}
 	    <div id="notice"><strong>NOTICE:</strong>: {{message}}</div>
 	    {% endfor %}
 	  {% endif %}
-	{# endwith #}
+	{% endwith %}
 	
 	<!--
 	<div id="succeed"><strong>Succeed</strong>: We have successfully sent your message!</div>
@@ -196,7 +196,7 @@
 				<td>{{database.size}}</td>
 				<td>{{database.indexes}}</td>
 				<td>{{database.index_size}}</td>
-				<td><a href="#">Use</a> | <a href="#">Edit</a> | <a href="#">Remove</a></td>
+				<td><a href="#">Use</a> | <a href="#">Rename</a> | <a href="{{url_for("drop_database", database=database.name)}}">Remove</a></td>
 			</tr>
 			{% endfor %}
 			</tbody>
