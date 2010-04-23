@@ -88,6 +88,15 @@ def clone_database():
             #return "%s to %s" % (from_db, to_db)
             
     
+@app.route("/database/repair/<database>")
+def repair_database(database):
+    this_db = pymongo.database.Database(g.mongo, database)
+    this_db.command("repairDatabase", safe=True)
+    #g.mongo.repair_database(database)
+    flash("%s has been repaired." % (database))
+    return redirect(url_for("databases"))
+
+    
 @app.route("/database/drop/<database>")
 def drop_database(database):
     try:

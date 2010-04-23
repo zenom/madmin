@@ -225,7 +225,7 @@
 				<td>{{database.size|pretty_size}}</td>
 				<td>{{database.indexes}}</td>
 				<td>{{database.index_size|pretty_size}}</td>
-				<td><a href="{{url_for("list_collections", database=database.name)}}">Use</a> | <a href="{{url_for("drop_database", database=database.name)}}" class="confirm">Drop</a> | <a href="{{database.name}}" class="clone-database">Clone</a> | <a href="#">Repair</a></td>
+				<td><a href="{{url_for("list_collections", database=database.name)}}">Use</a> | <a href="{{url_for("drop_database", database=database.name)}}" class="confirm">Drop</a> | <a href="{{database.name}}" class="clone-database">Clone</a> | <a href="{{url_for("repair_database", database=database.name)}}">Repair</a></td>
 			</tr>
 			{% endfor %}
 			</tbody>
