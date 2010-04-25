@@ -173,7 +173,14 @@
 		
 		<div class="navigation">
 			<ul>
-				<li class="active"><a href="{{url_for("databases")}}">Databases</a></li>
+				<li><a href="{{url_for("databases")}}">Hosts</a>
+				<ul>
+				    {% for server in servers %}
+					    <li><a href="{{url_for("databases", server=server)}}">{{servers[server].get("name")}} ({{servers[server].get("host")}})</a></li>
+					{% endfor %}
+				</ul>  
+				    
+				</li>
 				<li><a href="#">Reports</a></li>
 				<li><a href="#">System</a></li>
 			</ul>

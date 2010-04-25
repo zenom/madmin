@@ -40,9 +40,14 @@ def connect_mongo():
         default = config.get("madmin", "default")
         server = servers.get(default)
     
+    if request.path and "server" in request.path:
+        use_server = request.path.split("/")[1]
+        server = servers.get(use_server)
+        
     ## connect up to the initial mongo server.
     try:
         g.mongo = pymongo.Connection(server.get("host"), server.get("port"))
+        g.servers = servers
     except pymongo.errors.ConnectionFailure, e:
         return "Unable to connect to MongoDB instance."
          
@@ -50,8 +55,10 @@ def connect_mongo():
 ##############################
 # Database Management
 ##############################
+
+@app.route("/<server>")
 @app.route("/")
-def databases():
+def databases(server=None):
     
     databases = []
     
@@ -84,7 +91,7 @@ def databases():
         )
         databases.append(db)
     
-    return render_template("index.html", databases=databases)
+    return render_template("index.html", databases=databases, servers=g.servers)
     
     
 @app.route("/database/clone", methods=["POST",])
