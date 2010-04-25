@@ -17,8 +17,7 @@ config.readfp(open("madmin.ini"))
 
 @app.before_request
 def connect_mongo():
-    
-    servers = []
+    servers = {}
     sections = config.sections()
     for section in sections:
         if "server" in section:
@@ -26,19 +25,27 @@ def connect_mongo():
             port = config.getint(section, "port")
             name = config.get(section, "name", None)
             server_info = dict(name=name, host=host, port=port)
-            servers.append(server_info)
+            servers.update({section: server_info})
     
+    ## if nothing was configured, setup the basic defaults
     if not servers:
         server = dict(name="Default", host="127.0.0.1", port=27017)
-        servers.append(server)
+        servers.update({"server_1": server})
         
-    ## pick a server and connect
-    server = servers[0]
+    ## If the default option is not set choose the first one.
+    if not config.has_option("madmin", "default"):
+        first = servers.keys()[0]
+        server = servers.get(first)
+    else:
+        default = config.get("madmin", "default")
+        server = servers.get(default)
+    
+    ## connect up to the initial mongo server.
     try:
         g.mongo = pymongo.Connection(server.get("host"), server.get("port"))
     except pymongo.errors.ConnectionFailure, e:
         return "Unable to connect to MongoDB instance."
-
+         
 
 ##############################
 # Database Management
@@ -56,12 +63,11 @@ def databases():
         # don't want people removing these as I believe they are important
         if database in ["test", "local"]:
                 continue
-        
-        this_db = pymongo.database.Database(g.mongo, database)
-        for coll in this_db.collection_names():
+
+        for coll in g.mongo[database].collection_names():
             
             try:
-                idx_info = this_db.command("collstats", coll, safe=True)
+                idx_info = g.mongo[database].command("collstats", coll, safe=True)
             except pymongo.OperationalError, e:
                 print e
                 
@@ -73,7 +79,7 @@ def databases():
             name=database, 
             size=total_size, 
             indexes=total_indexes, 
-            collections=len(this_db.collection_names()),
+            collections=len(g.mongo[database].collection_names()),
             index_size=total_index_size,
         )
         databases.append(db)
@@ -101,14 +107,14 @@ def clone_database():
             finally:
                 return ""
             
-            #return "%s to %s" % (from_db, to_db)
-            
     
 @app.route("/database/repair/<database>")
 def repair_database(database):
-    this_db = pymongo.database.Database(g.mongo, database)
-    this_db.command("repairDatabase", safe=True)
-    #g.mongo.repair_database(database)
+    try:
+        g.mongo[database].command("repairDatabase", safe=True)
+    except pymongo.errors.OperationError, e:
+        return "Unable to repair database."
+        
     flash("%s has been repaired." % (database))
     return redirect(url_for("databases"))
 
@@ -130,16 +136,15 @@ def drop_database(database):
 
 @app.route("/<database>/collections")
 def list_collections(database):
-    this_db = pymongo.database.Database(g.mongo, database)
     
     collections = []
-    for coll in this_db.collection_names():
+    for coll in g.mongo[database].collection_names():
         if coll in ["system.indexes",]:
             continue
             
         total_indexes = total_size = total_index_size = 0
         try:
-            idx_info = this_db.command("collstats", coll, safe=True)
+            idx_info = g.mongo[database].command("collstats", coll, safe=True)
         except pymongo.OperationalError, e:
             print e
             
