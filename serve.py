@@ -17,11 +17,27 @@ config.readfp(open("madmin.ini"))
 
 @app.before_request
 def connect_mongo():
-    host = config.get("mongo", "host")
-    port = int(config.get("mongo", "port"))
-    username = config.get("mongo", "username")
-    password = config.get("mongo", "password")
-    g.mongo = pymongo.Connection(host, port)
+    
+    servers = []
+    sections = config.sections()
+    for section in sections:
+        if "server" in section:
+            host = config.get(section, "host", "127.0.0.1")
+            port = config.getint(section, "port")
+            name = config.get(section, "name", None)
+            server_info = dict(name=name, host=host, port=port)
+            servers.append(server_info)
+    
+    if not servers:
+        server = dict(name="Default", host="127.0.0.1", port=27017)
+        servers.append(server)
+        
+    ## pick a server and connect
+    server = servers[0]
+    try:
+        g.mongo = pymongo.Connection(server.get("host"), server.get("port"))
+    except pymongo.errors.ConnectionFailure, e:
+        return "Unable to connect to MongoDB instance."
 
 
 ##############################
@@ -162,4 +178,4 @@ app.jinja_env.filters["pretty_size"] = pretty_size
 
 if __name__ == "__main__":
     app.secret_key = "kTNpaQRVgJzwwTxcavixEpQqTwQezSVJLkALaUiJDj0fBc1Cfd"
-    app.run(host=config.get("madmin", "host"), port=int(config.get("madmin", "port")), debug=True)
+    app.run(host=config.get("madmin", "host"), port=int(config.getint("madmin", "port")), debug=True)
